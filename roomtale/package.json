@@ -1,0 +1,32 @@
+{
+  "name": "roomtale",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "predev": "node scripts/vendor-mediapipe.mjs",
+    "dev": "next dev --hostname 0.0.0.0 --port 7141",
+    "prebuild": "node scripts/vendor-mediapipe.mjs",
+    "build": "next build",
+    "start": "next start --hostname 0.0.0.0 --port 7141",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@kabletv/little-react": "^0.39.1",
+    "@kabletv/little-sdk": "^0.39.1",
+    "@mediapipe/tasks-vision": "^1.2.2",
+    "next": "^16.4.5",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.5",
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "tailwindcss": "^4.3.5",
+    "typescript": "~5.9.3",
+    "vitest": "^5.1.0"
+  }
+}

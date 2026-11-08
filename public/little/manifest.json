@@ -1,0 +1,53 @@
+{
+  "title": "Couch Clash",
+  "description": "Couch Clash: fast living-room mini-games played with your hands on camera against the TV. Launch when the viewer wants to play rock paper scissors against the TV, wants a quick reaction or party game to play from the couch, or asks for Couch Clash.",
+  "guide": "The viewer plays with their hands on camera, not by telling you their move. Never choose or announce a throw for them, and never predict the TV's throw. Call start_round when they say start, go, again, or rematch. Call back_to_menu when they want a different game. After a round you may react to the round_result event in one short line; keep quiet during a round so you don't talk over the countdown.",
+  "launchSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "game": {
+        "type": "string",
+        "enum": ["rps"],
+        "description": "Open straight into this game. Use \"rps\" when the viewer asks for rock paper scissors. Omit to show the game menu."
+      }
+    }
+  },
+  "capabilities": [
+    {
+      "name": "media.camera",
+      "reason": "Couch Clash reads your hand gestures to play. Video is processed on this TV and is never uploaded."
+    }
+  ],
+  "tools": [
+    {
+      "name": "open_game",
+      "description": "Open one of the Couch Clash games. Use when the viewer names a game to play (\"play rock paper scissors\") or picks one from the menu.",
+      "authority": "mutate",
+      "params": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["game"],
+        "properties": {
+          "game": {
+            "type": "string",
+            "enum": ["rps"],
+            "description": "Which game. \"rps\" is rock paper scissors, the only game available so far."
+          }
+        }
+      }
+    },
+    {
+      "name": "start_round",
+      "description": "Start the next round of the open game (the countdown begins immediately). Use when the viewer says start, go, ready, again, or rematch.",
+      "authority": "mutate",
+      "params": { "type": "object", "properties": {} }
+    },
+    {
+      "name": "back_to_menu",
+      "description": "Leave the current game and return to the Couch Clash game menu. Use when the viewer wants to stop this game or pick a different one.",
+      "authority": "mutate",
+      "params": { "type": "object", "properties": {} }
+    }
+  ]
+}

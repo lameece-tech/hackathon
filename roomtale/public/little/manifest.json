@@ -1,0 +1,116 @@
+{
+  "title": "RoomTale",
+  "description": "RoomTale: a short narrated movie starring the people in the living room. The TV camera takes one photo of the room and films everyone into the story as live-action characters. Launch when the viewer asks for a story about us, the family, everyone here, or the people in the room, wants a bedtime or silly story starring themselves, or asks for RoomTale.",
+  "guide": "RoomTale films the people on camera into a short live-action movie and narrates it itself. When the viewer asks for a story or a movie about themselves, call tell_story with their request as the prompt, keeping their theme, tone and any casting wishes (\"make Dad the villain\"). Don't ask follow-up questions first; a vague request is fine. Filming the opening scenes takes a few minutes; reassure them it's rolling if they ask. While the movie plays it has its own voiceover: stay silent and never narrate it yourself. Use skip_scene, previous_scene, pause_movie and resume_movie for playback requests, end_movie for stop or exit, and tell_another_story when they want a sequel or a new movie with the same people without a new photo. Never describe how anyone looks beyond the character names on screen.",
+  "launchSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "prompt": {
+        "type": "string",
+        "description": "The viewer's story request in their own words, e.g. \"a silly sci-fi story about everyone in this room\". Include it when they asked for a story while launching RoomTale; omit it when they only opened the app."
+      }
+    }
+  },
+  "capabilities": [
+    {
+      "name": "media.camera",
+      "reason": "RoomTale shows your living room on screen and, when you ask for a story, takes one photo of the room and cuts out everyone in it. The photo and those cutouts are sent to RoomTale's AI partners to write the story and film your family into it. Live video never leaves this TV."
+    },
+    {
+      "name": "voice.say",
+      "reason": "RoomTale reads each page of the story aloud."
+    },
+    {
+      "name": "sense.speech",
+      "reason": "RoomTale shows your story request on screen as you say it."
+    },
+    {
+      "name": "voice.config",
+      "reason": "RoomTale helps the TV recognize story words and character names."
+    }
+  ],
+  "tools": [
+    {
+      "name": "tell_story",
+      "description": "Take a fresh photo of the room and make a new live-action movie starring everyone in it. Call when the viewer asks for a story or movie about themselves, the family, or the people in the room, including when one is already playing and they want a different one.",
+      "authority": "mutate",
+      "params": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "prompt"
+        ],
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "The viewer's request in their own words: theme, tone, length and casting wishes, e.g. \"a silly sci-fi story about everyone here, and make the dog the captain\". Use \"a funny adventure about everyone in the room\" when they gave no details."
+          }
+        }
+      }
+    },
+    {
+      "name": "tell_another_story",
+      "description": "Make a new movie with the same cast as the last one, without taking a new photo. Call when the viewer wants another one, a sequel, or the same people in a different theme right after a movie.",
+      "authority": "mutate",
+      "params": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "prompt"
+        ],
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "What the new story should be, e.g. \"now make it a pirate adventure\" or \"a sequel where they go home\"."
+          }
+        }
+      }
+    },
+    {
+      "name": "skip_scene",
+      "description": "Cut ahead to the next scene of the movie that is playing. Call when the viewer says skip, next, or keep going.",
+      "authority": "mutate",
+      "params": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "previous_scene",
+      "description": "Go back one scene and play it again. Call when the viewer says go back or play that again.",
+      "authority": "mutate",
+      "params": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "pause_movie",
+      "description": "Pause the movie. Call when the viewer says pause, wait, or hold on.",
+      "authority": "mutate",
+      "params": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "resume_movie",
+      "description": "Resume a paused movie from the start of the current scene. Call when the viewer says resume, continue, or play.",
+      "authority": "mutate",
+      "params": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "end_movie",
+      "description": "Stop the movie (or the one being filmed) and go back to the live room view. Call when the viewer says stop, cancel, or that's enough.",
+      "authority": "mutate",
+      "params": {
+        "type": "object",
+        "properties": {}
+      }
+    }
+  ]
+}

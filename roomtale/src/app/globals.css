@@ -1,0 +1,171 @@
+@import "tailwindcss";
+
+/* Authored in px against the TV's fixed 1920×1080 canvas (a 4K panel renders it at 2×).
+   Avoid vw/vh: the Little dev stage scales the canvas with CSS zoom, which they ignore. */
+
+@theme {
+  --color-night: #070712;
+  --color-dusk: #12122a;
+  --color-aurora: #8b5cf6;
+  --color-glow: #22d3ee;
+  --color-ember: #fbbf24;
+  --color-blush: #fb7185;
+  --color-mint: #34d399;
+  --font-sans: ui-rounded, "SF Pro Rounded", "Nunito", "Segoe UI", Roboto, system-ui, sans-serif;
+
+  --animate-fade-up: fade-up 600ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
+  --animate-pop-in: pop-in 520ms cubic-bezier(0.2, 1.5, 0.4, 1) both;
+  --animate-breathe: breathe 3.2s ease-in-out infinite;
+  --animate-bob: bob 3.6s ease-in-out infinite;
+  --animate-caret: caret 1s steps(1) infinite;
+  --animate-flash: flash 700ms ease-out both;
+  --animate-shimmer: shimmer 1.8s linear infinite;
+  --animate-spin-slow: spin 6s linear infinite;
+  --animate-kenburns-a: kenburns-a 22s ease-in-out both;
+  --animate-kenburns-b: kenburns-b 22s ease-in-out both;
+  --animate-drift: drift 60s linear infinite;
+  --animate-sway: sway 5.5s ease-in-out infinite;
+  --animate-tag: tag 5s ease-out both;
+  --animate-countdown: countdown linear both;
+
+  @keyframes sway {
+    0%, 100% { transform: rotate(-0.6deg) scale(1); }
+    50% { transform: rotate(0.6deg) scale(1.012); }
+  }
+  @keyframes tag {
+    0% { opacity: 0; transform: translateY(12px); }
+    10%, 80% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-6px); }
+  }
+  @keyframes countdown {
+    from { stroke-dashoffset: 0; }
+    to { stroke-dashoffset: var(--ring-length); }
+  }
+  @keyframes credits {
+    from { transform: translateY(0); }
+    to { transform: translateY(calc(-100% + 1080px)); }
+  }
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(32px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pop-in {
+    from { opacity: 0; transform: scale(0.4); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); opacity: 0.85; }
+    50% { transform: scale(1.06); opacity: 1; }
+  }
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+  }
+  @keyframes caret {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+  @keyframes flash {
+    from { opacity: 0.85; }
+    to { opacity: 0; }
+  }
+  @keyframes shimmer {
+    from { background-position: -600px 0; }
+    to { background-position: 600px 0; }
+  }
+  @keyframes kenburns-a {
+    from { transform: scale(1.04) translate(0, 0); }
+    to { transform: scale(1.16) translate(-2%, -1.5%); }
+  }
+  @keyframes kenburns-b {
+    from { transform: scale(1.16) translate(2%, 1%); }
+    to { transform: scale(1.04) translate(0, 0); }
+  }
+  @keyframes drift {
+    from { background-position: 0 0; }
+    to { background-position: 1920px 540px; }
+  }
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background: var(--color-night);
+  color: white;
+  color-scheme: dark;
+  -webkit-font-smoothing: antialiased;
+  cursor: none;
+}
+
+@layer components {
+  /* Overscan: the host publishes --little-safe-*; the extra inset keeps text off the bezel. */
+  .tv-safe {
+    padding: calc(var(--little-safe-top, 0px) + 56px) calc(var(--little-safe-right, 0px) + 80px)
+      calc(var(--little-safe-bottom, 0px) + 56px) calc(var(--little-safe-left, 0px) + 80px);
+  }
+
+  .glass {
+    @apply border border-white/15 bg-black/45 backdrop-blur-xl;
+  }
+
+  /* Remote focus must be unmistakable from across the room. */
+  .tv-focus {
+    @apply outline-none transition-transform duration-150;
+  }
+  .tv-focus:focus-visible {
+    @apply scale-110 ring-8 ring-ember;
+  }
+
+  .text-shadow-tv {
+    text-shadow: 0 4px 24px rgb(0 0 0 / 0.65), 0 2px 4px rgb(0 0 0 / 0.5);
+  }
+
+  /* The laser: a bright core, a soft bloom, and a fading trail above it. */
+  .scan-laser {
+    position: absolute;
+    inset-inline: 0;
+    height: 220px;
+    background: linear-gradient(to bottom, transparent, rgb(34 211 238 / 0.18) 70%, rgb(34 211 238 / 0.55) 96%, #e0fbff 100%);
+    box-shadow: 0 18px 60px 10px rgb(34 211 238 / 0.55);
+    animation: scan-sweep 2.6s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+  }
+  @keyframes scan-sweep {
+    from { transform: translateY(-220px); }
+    to { transform: translateY(1080px); }
+  }
+
+  .scan-grid {
+    background-image: linear-gradient(rgb(34 211 238 / 0.09) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(34 211 238 / 0.09) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+
+  /* Mic rings scale with --level (0–1), set every frame from the microphone. */
+  .mic-ring {
+    transform: scale(calc(1 + var(--level, 0) * var(--ring-gain, 0.6)));
+    transition: transform 80ms linear;
+  }
+
+  /* Fine film grain over generated footage, so stills and clips read as one camera. */
+  .film-grain {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+    opacity: 0.18;
+  }
+
+  .starfield {
+    background-image: radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 140px 90px, #fff, transparent),
+      radial-gradient(2.5px 2.5px at 260px 200px, #fde68a, transparent),
+      radial-gradient(1.5px 1.5px at 380px 60px, #fff, transparent),
+      radial-gradient(2px 2px at 520px 260px, #c4b5fd, transparent);
+    background-size: 600px 320px;
+    opacity: 0.55;
+  }
+}

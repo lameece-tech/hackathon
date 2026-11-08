@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #07070c;
+  --color-panel: #12121c;
+  --color-hot: #ff2e88;
+  --color-volt: #ffe14d;
+  --color-ice: #22e4ff;
+  --color-go: #5cff6a;
+  --color-stop: #ff3b3b;
+  --font-sans: "Inter", "Helvetica Neue", Arial, system-ui, sans-serif;
+
+  --animate-pop: pop 260ms cubic-bezier(0.2, 1.6, 0.4, 1) both;
+  --animate-reveal: reveal 320ms cubic-bezier(0.2, 1.5, 0.4, 1) both;
+  --animate-pump: pump 1000ms ease-out both;
+  --animate-enter: enter 280ms ease-out both;
+  --animate-shake: shake 420ms ease-in-out both;
+
+  @keyframes pop {
+    from { transform: scale(1.6); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  @keyframes reveal {
+    from { transform: scale(0.2) rotate(-25deg); opacity: 0; }
+    to { transform: scale(1) rotate(0); opacity: 1; }
+  }
+  @keyframes pump {
+    0% { transform: translateY(-50px); }
+    35% { transform: translateY(40px); }
+    100% { transform: translateY(0); }
+  }
+  @keyframes enter {
+    from { transform: scale(0.97); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-24px); }
+    40%, 80% { transform: translateX(24px); }
+  }
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background: var(--color-ink);
+  color: white;
+  color-scheme: dark;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer components {
+  /* Remote focus must be unmistakable from across the room. */
+  .tv-button {
+    @apply rounded-full px-14 py-6 text-4xl font-black tracking-wider outline-none transition-transform duration-100;
+  }
+  .tv-button:focus {
+    @apply scale-110 ring-8 ring-volt;
+  }
+  .tile {
+    @apply relative flex h-[500px] w-[380px] flex-col items-start gap-4 rounded-[36px] border-4 border-white/10 bg-panel p-9 text-left outline-none transition-transform duration-100;
+  }
+  button.tile:focus {
+    @apply scale-105 border-volt shadow-[0_0_70px_var(--color-volt)];
+  }
+}
